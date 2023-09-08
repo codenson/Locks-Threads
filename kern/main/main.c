@@ -1,5 +1,6 @@
 /*
  * Main.
+ * Marouane Gueoruji
  */
 
 #include <types.h>
@@ -16,6 +17,7 @@
 #include <vm.h>
 #include <syscall.h>
 #include <version.h>
+
 
 /*
  * These two pieces of data are maintained by the makefiles and build system.
@@ -158,10 +160,13 @@ sys_reboot(int code)
 int
 kmain(char *arguments)
 {
+        
 	boot();
 
+        //hello fucntion call from hello.c 
+        hello();
 	menu(arguments);
-
+	
 	/* Should not get here */
 	return 0;
 }
