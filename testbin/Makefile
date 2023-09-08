@@ -1,63 +1,46 @@
 #
-# Toplevel makefile for OS/161.
-#
-#
-# Rules:
-#    all (default):  depend, compile, and install system.
-#    build:          depend, compile, and install system from scratch.
-#    compile:        compile and install binaries.
-#    includes:       install header files.
-#    tags:           generate/regenerate "tags" files.
-#    depend:         update make dependency information.
-#    clean:          remove generated files.
-#
-# The "compile" rule subsumes both compilation and installation,
-# because certain parts must be installed before subsequent parts
-# can be built. Note that it does *not* install include files.
-#
-# The "includes" rule installs header files from the kernel and
-# libraries into the include directory of the system tree.
+# Makefile for src/testbin (sources for programs installed in /testbin)
 #
 
-all:
-	$(MAKE) includes
-	$(MAKE) depend
-	$(MAKE) compile
+include ../defs.mk
 
-build:
-	$(MAKE) clean
-	$(MAKE) all
+all depend tags clean install:
+	(cd add && $(MAKE) $@)
+	(cd argtest && $(MAKE) $@)
+	(cd badcall && $(MAKE) $@)
+	(cd bigfile && $(MAKE) $@)
+	(cd conman && $(MAKE) $@)
+	(cd crash && $(MAKE) $@)
+	(cd ctest && $(MAKE) $@)
+	(cd dirconc && $(MAKE) $@)
+	(cd dirseek && $(MAKE) $@)
+	(cd dirtest && $(MAKE) $@)
+	(cd f_test && $(MAKE) $@)
+	(cd farm && $(MAKE) $@)
+	(cd faulter && $(MAKE) $@)
+	(cd filetest && $(MAKE) $@)
+	(cd forkbomb && $(MAKE) $@)
+	(cd forktest && $(MAKE) $@)
+	(cd guzzle && $(MAKE) $@)
+	(cd hash && $(MAKE) $@)
+	(cd hog && $(MAKE) $@)
+	(cd huge && $(MAKE) $@)
+	(cd kitchen && $(MAKE) $@)
+	(cd matmult && $(MAKE) $@)
+	(cd palin && $(MAKE) $@)
+	(cd parallelvm && $(MAKE) $@)
+	(cd randcall && $(MAKE) $@)
+	(cd rmdirtest && $(MAKE) $@)
+	(cd rmtest && $(MAKE) $@)
+	(cd sink && $(MAKE) $@)
+	(cd sort && $(MAKE) $@)
+	(cd sty && $(MAKE) $@)
+	(cd tail && $(MAKE) $@)
+	(cd tictac && $(MAKE) $@)
+	(cd triplehuge && $(MAKE) $@)
+	(cd triplemat && $(MAKE) $@)
+	(cd triplesort && $(MAKE) $@)
 
-compile:
-	(cd lib && $(MAKE))
-	(cd lib && $(MAKE) install)
-	(cd bin && $(MAKE))
-	(cd sbin && $(MAKE))
-	(cd testbin && $(MAKE))
-	(cd bin && $(MAKE) install)
-	(cd sbin && $(MAKE) install)
-	(cd testbin && $(MAKE) install)
-	(cd man && $(MAKE) install)
-	(cd kern && $(MAKE))
-	(cd kern && $(MAKE) install)
-
-includes:
-	(cd kern && $(MAKE) includes)
-	(cd include && $(MAKE) includes)
-	(cd lib/hostcompat && $(MAKE) includes)
-
-tags depend clean:
-	(cd include && $(MAKE) $@)
-	(cd lib && $(MAKE) $@)
-	(cd bin && $(MAKE) $@)
-	(cd sbin && $(MAKE) $@)
-	(cd testbin && $(MAKE) $@)
-	(cd man && $(MAKE) $@)
-	(cd kern && $(MAKE) $@)
-
-clean: cleanhere
-cleanhere:
-	rm -f *~ mk/*~
-
-
-.PHONY: all build compile includes tags depend clean cleanhere
+# But not:
+#    malloctest     (no malloc/free until you write it)
+#    userthreads    (no support in kernel API in base system)
