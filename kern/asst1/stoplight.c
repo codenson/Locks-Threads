@@ -35,6 +35,7 @@ static void approachintersection(void * unusedpointer, unsigned long vehiclenumb
 static void turnright(unsigned long vehicledirection, unsigned long vehiclenumber, unsigned long vehicletype); 
 int get_turn( unsigned long vehicledirection);
 static void turnleft(unsigned long vehicledirection, unsigned long vehiclenumber, unsigned long vehicletype); 
+int get_Right_turn( unsigned long vehicledirection);
 
 /**Locks where they represent turns. We implement three locks since each would represent a turn */
 
@@ -116,13 +117,25 @@ lock *lockCA;*/
 	 // turns : AB = 0; BC = 1; CA = 2
 
     /// if 
-	kprintf("Vehicle Type : %lu with vehivle Number: %lu is attempting to make a left turn \n",vehicletype, vehiclenumber ); 
+	kprintf("Left func: begginign : Vehicle Type : %lu with vehivle Number: %lu is attempting to make a left turn \n",vehicletype, vehiclenumber ); 
 
     int correct_turn =  get_turn(vehicledirection);
+
+	if (lock_do_i_hold(intersection_lock)){
+		///thread_sleep(intersection_lock); 
+	}
 	lock_acquire(lockAB); 
+	//lock_do_i_hold(lockAB);
 	lock_acquire(lockBC); 
 	lock_acquire(lockCA); 
-	kprintf( "Vehicle Type : %lu with vehivle Number: %lu completed its left turn to %d \n",vehicletype, vehiclenumber,correct_turn ); 
+	if (lock_do_i_hold(lockAB) && lock_do_i_hold(lockBC) && lock_do_i_hold(lockCA)){
+		kprintf("I hold all the keys ......555555555555555555555.");
+	}
+	else {
+		kprintf("I don t hold the keys :.....ls");
+	}
+	kprintf( "Vehicle Type : %lu with vehivle Number: %lu completed its leaving the interection  to %d \n",vehicletype, vehiclenumber,correct_turn );
+	///kprintf( "Vehicle Type : %lu with vehivle Number: %lu completed its left turn to %d \n",vehicletype, vehiclenumber,correct_turn ); 
 
 	//if 
 	//  
@@ -132,6 +145,10 @@ lock *lockCA;*/
 
 	// }
 	//lock_release(intersection_lock);
+	lock_release(lockAB);
+	lock_release(lockBC);
+	lock_release(lockCA);
+	kprintf( "Vehicle Type : %lu with vehivle Number: %lu completed its left turn to %d \n",vehicletype, vehiclenumber,correct_turn ); 
 
 
 }
@@ -188,7 +205,36 @@ turnright(unsigned long vehicledirection,
 	(void) vehicledirection;
 	(void) vehiclenumber;
 	(void) vehicletype;
+
+	kprintf("right func : Vehicle Type : %lu with vehivle Number: %lu is attempting to make a right turn \n",vehicletype, vehiclenumber ); 
+	int correct_turn =  get_Right_turn(vehicledirection);
+	lock_acquire(lockAB); 
+	lock_acquire(lockBC); 
+	lock_acquire(lockCA); 
+	kprintf( "Vehicle Type : %lu with vehivle Number: %lu completed its leaving the interection  to %d \n",vehicletype, vehiclenumber,correct_turn );
+    
+	lock_release(lockAB);
+	lock_release(lockBC);
+	lock_release(lockCA);
+	kprintf( "Vehicle Type : %lu with vehivle Number: %lu completed its right turn to %d \n",vehicletype, vehiclenumber,correct_turn ); 
+
 }
+
+int get_Right_turn( unsigned long vehicledirection){
+	if (vehicledirection  == 0){
+		return 0; 
+	}
+	else if (vehicledirection == 1){
+		return 1; 
+	}
+	else if (vehicledirection == 2){
+		return 2; 
+	}
+
+	return -1; 
+
+
+} 
 
 
 /*
@@ -241,17 +287,19 @@ approachintersection(void * unusedpointer,
 	vehicledirection = random() % 3;
 	turndirection = random() % 2;
 	vehicletype = random() % 2;
-	kprintf("vehicle type %d with number : %lu is approaching the intersection from %d and is traveling to  %d.\n", vehicletype,vehiclenumber, vehicledirection,turndirection);
+	//kprintf("vehicle type %d with number : %lu is approaching the intersection from %d and is traveling to  %d.\n", vehicletype,vehiclenumber, vehicledirection,turndirection);
     
 	///if (lock_acquire())
 	
 	if (vehicletype == CAR && truck_in_intersection == 0  ){
+		//kprintf("1 vehicle type CAR + TRUCK 66666666666666666666666666666CAR \n");
 		lock_acquire(intersection_lock);
 		send_to_turn(turndirection, (unsigned long) vehicledirection, vehiclenumber, (unsigned long) vehicletype); 
 		
 	}
 	// if a truck already is in the intersection, and a car is approaching, truck goes first
 	else if (vehicletype == CAR && truck_in_intersection == 1){ 
+		//kprintf("2 vehicle type CAR + TRUCK  66666666666666666666666666666CAR \n");
 	
 		while (truck_in_intersection == 1 ){
 		thread_sleep(intersection_lock); 
@@ -264,14 +312,17 @@ approachintersection(void * unusedpointer,
 
 	}
 	else if (vehicletype == TRUCK && truck_in_intersection == 1  ){
+		//kprintf("3 vehicle type  TRUCK 999999999999999 \n");
 		while (truck_in_intersection == 1 ){
 		thread_sleep(intersection_lock); 
 		} 
 		lock_acquire(intersection_lock);
         send_to_turn( turndirection, (unsigned long) vehicledirection, vehiclenumber, (unsigned long) vehicletype); 
 		
+		
 	}
 	else { // tack is the firt at the entersection. 
+	//kprintf("elseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee \n");
 	lock_acquire(intersection_lock);
 	truck_in_intersection = 1; 
 	send_to_turn(turndirection,  (unsigned long) vehicledirection,vehiclenumber, (unsigned long) vehicletype); 
@@ -288,11 +339,12 @@ approachintersection(void * unusedpointer,
 */
 void send_to_turn( int turn , unsigned long vehicledirection,unsigned long vehiclenumber,unsigned long vehicletype){
 	if (turn == 0 ){
-		kprintf("vehiles type : %lu with number : %lu is trying to make a left turn %lu",vehicletype , vehiclenumber, vehicledirection );
+		kprintf("send_turn: vehiles type : %lu with number : %lu is trying to make a left turn %lu",vehicletype , vehiclenumber, vehicledirection );
 		turnleft(vehicledirection,vehiclenumber,vehicletype);
 	}
 	else {
-		kprintf("vehiles type : %lu with number : %lu is trying to make a right turn %lu",vehicletype , vehiclenumber, vehicledirection );
+		kprintf("send_turn: vehiles type : %lu with number : %lu is trying to make a right turn %lu",vehicletype , vehiclenumber, vehicledirection );
+		//kprintf("debugging here  *******************************");
 		turnright(vehicledirection,vehiclenumber,vehicletype);
 
 	}
@@ -375,6 +427,12 @@ if (intersection_lock == NULL) {
 				 );
 		}
 	}
+	// After all vehicle threads have completed.
+// lock_destroy(lockAB); 
+// lock_destroy(lockBC); 
+// lock_destroy(lockCA); 
+// lock_destroy(intersection_lock); 
+
 
 	return 0;
 }
