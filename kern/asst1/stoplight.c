@@ -46,6 +46,7 @@ static struct lock *intersection_lock; //intersection helpre lock. used for slee
  */
 
 #define NVEHICLES 20
+//Identifiers for car types, routes, and direction they will turn.
 static const char *route[] = { "A", "B", "C" };
 static const char *vehicle_Type[] = {"CAR  ", "TRUCK"}; 
 static const char *vehicle_direction[] = {"left", "right"};
@@ -112,7 +113,8 @@ lock *lockCA;*/
      //Route A = 0 ; B = 1; C = 2
 	 //
 	 // turns : AB = 0; BC = 1; CA = 2
-
+	//Checking to see where to turn left
+	//Turning into AB
 	if (vehicledirection == 0){
 
 			lock_acquire(lockAB);
@@ -131,7 +133,7 @@ lock *lockCA;*/
 		 
 	
 	}
-
+	//Turning into BC
 	else if (vehicledirection == 1){
 
 			lock_acquire(lockBC);
@@ -150,7 +152,7 @@ lock *lockCA;*/
 		 	
 
 	}
-
+	//Turning into CA
 	else// if (vehicledirection == 2)
 	{
 	
@@ -203,7 +205,8 @@ turnright(unsigned long vehicledirection,
 	(void) vehicledirection;
 	(void) vehiclenumber;
 	(void) vehicletype;
-
+	//Checking to see where to turn right
+	//Turning into AB
 	if (vehicledirection == 0){
 
 		lock_acquire(lockAB); 
@@ -212,6 +215,7 @@ turnright(unsigned long vehicledirection,
 		lock_release(lockAB); 
 		
 	}
+	//Turning into BC
 	else if (vehicledirection == 1){
 
 		lock_acquire(lockBC); 
@@ -221,6 +225,7 @@ turnright(unsigned long vehicledirection,
 
 		
 	}
+	//Turning into CA
 	else if (vehicledirection == 2){
 
 		lock_acquire(lockCA) ; 
@@ -246,38 +251,33 @@ void send_to_turn( int turn , unsigned long vehicledirection,unsigned long vehic
  * helper function to get correct vehicle destination 
 */
 int get_dest_direction(int dir,  int turn ){
+	//If turn is left
+	//Destinations are A=0, B=1,  C=2
 	if (turn == 0)
 	{
-
-	if (dir == 0){
-		return 2; 
-	}
-	else if (dir == 1){
-
-		return 0; 
-	}
-	else {
-
-		return 1; 
-	}
+		if (dir == 0){
+			return 2; 
+		}
+		else if (dir == 1){
+			return 0; 
+		}
+		else {
+			return 1; 
+		}
 	} 
+	//if turn is right
 	else {
 		if (dir == 0){
-		return 1; 
+			return 1; 
+		}
+		else if (dir == 1){
+			return 2; 
+		}
+		else{
+			return 0; 
+		}
 	}
-	else if (dir == 1){
-
-		return 2; 
-	}
-	else{
-
-		return 0; 
-	}
-
-	}
-
 	return  -1; 
-
 }
 
 
@@ -327,7 +327,7 @@ approachintersection(void * unusedpointer,
 
 	else {
       
-
+			//Cars are still ther eso we lock so that the other cars finish crossing
 			if(Total_Cars[vehicledirection] > 0) {  
 			   int spl=splhigh();
 
@@ -338,14 +338,14 @@ approachintersection(void * unusedpointer,
 		send_to_turn(turndirection,  (unsigned long) vehicledirection,vehiclenumber, (unsigned long) vehicletype);
 	}
 
-
-	  Vehicle_counter++;
-         if(Vehicle_counter == NVEHICLES) {
-              Vehicle_counter=0;
-		     	int spl = splhigh();
-				thread_wakeup(intersection_lock);
-		     	splx(spl);
-  }
+	//Counter for cars
+	Vehicle_counter++;
+	if(Vehicle_counter == NVEHICLES) {
+        Vehicle_counter=0;
+		int spl = splhigh();
+		thread_wakeup(intersection_lock);
+		splx(spl);
+  	}
   	kprintf("Vehicle type: %s vehicle Num: %lu exited %s destination : %s direction: %s\n", vehicle_Type[vehicletype],vehiclenumber, route[vehicledirection] ,route[direct], vehicle_direction[turndirection]);
   vehicles_left--; 
 
