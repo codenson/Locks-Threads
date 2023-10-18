@@ -210,7 +210,7 @@ turnright(unsigned long vehicledirection,
 	if (vehicledirection == 0){
 
 		lock_acquire(lockAB); 
-		kprintf("Vehicle type: %s vehicle Num: %lu is at rigth section AB in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+		kprintf("Vehicle type: %s vehicle Num: %lu is at section AB in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
 
 		lock_release(lockAB); 
 		
@@ -219,7 +219,7 @@ turnright(unsigned long vehicledirection,
 	else if (vehicledirection == 1){
 
 		lock_acquire(lockBC); 
-		kprintf("Vehicle type: %s vehicle Num: %lu is at right section BC in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+		kprintf("Vehicle type: %s vehicle Num: %lu is at section BC in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
 
 		lock_release(lockBC); 
 
@@ -229,7 +229,7 @@ turnright(unsigned long vehicledirection,
 	else if (vehicledirection == 2){
 
 		lock_acquire(lockCA) ; 
-		kprintf("Vehicle type: %s vehicle Num: %lu is at right section CA in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+		kprintf("Vehicle type: %s vehicle Num: %lu is at section CA in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
 
 		lock_release(lockCA); 
 	
