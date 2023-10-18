@@ -390,7 +390,7 @@ createvehicles(int nargs,
 	
 
 
-  /*an int array to keep track of numcars on each of the three routes*/
+  // queue for cars on road. 
      Total_Cars = (int *)kmalloc(3 * sizeof(int));
 	*(Total_Cars) = 0;
 	*(Total_Cars + 1) = 0;
@@ -441,14 +441,12 @@ createvehicles(int nargs,
 	}
 	
 
-	while (vehicles_left != 0){
-
+    while (vehicles_left != 0)
+	{
 
 	}
 
-
-
-kprintf("****************vehicles_left: %d   *****************\n", vehicles_left);
+kprintf("****************Done running, Vehicles left in the intersection : %d   *****************\n", vehicles_left);
 lock_destroy(lockAB); 
 lock_destroy(lockBC); 
 lock_destroy(lockCA);  
