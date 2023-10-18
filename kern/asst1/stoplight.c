@@ -24,13 +24,6 @@
 #include <machine/spl.h>
 
 
-
-/*
- *
- * Constants
- *
- */
-
 int createvehicles(int nargs,char ** args); 
 void send_to_turn( int turn , unsigned long vehicledirection,unsigned long vehiclenumber,unsigned long vehicletype); 
 static void approachintersection(void * unusedpointer, unsigned long vehiclenumber); 
@@ -44,8 +37,8 @@ static struct lock *lockAB; // Lock for segment AB
 static struct lock *lockBC; // Lock for segment BC
 static struct lock *lockCA; // Lock for segment CA
 
-static struct lock *intersection_lock; //
-#define CAR 0
+static struct lock *intersection_lock; //intersection helpre lock. used for sleep and wakeup
+#define CAR 0   
 #define TRUCK 1
 
 /*
@@ -57,9 +50,9 @@ static const char *route[] = { "A", "B", "C" };
 static const char *vehicle_Type[] = {"CAR  ", "TRUCK"}; 
 static const char *vehicle_direction[] = {"left", "right"};
 
-int vehicles_left; 
+int vehicles_left;  // counter for vehicles who exited the intersection. 
 
-
+/*queue to tack how many cars are in the queue before  a truck can go. */
 int *Total_Cars;
 volatile int Vehicle_counter=0;
 
@@ -249,7 +242,9 @@ void send_to_turn( int turn , unsigned long vehicledirection,unsigned long vehic
 }
 
 
-
+/**
+ * helper function to get correct vehicle destination 
+*/
 int get_dest_direction(int dir,  int turn ){
 	if (turn == 0)
 	{
