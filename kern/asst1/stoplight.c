@@ -448,11 +448,10 @@ createvehicles(int nargs,
 
 
 
-	kprintf("****************vehicles_left: %d   *****************\n", vehicles_left);
+kprintf("****************vehicles_left: %d   *****************\n", vehicles_left);
 lock_destroy(lockAB); 
 lock_destroy(lockBC); 
-lock_destroy(lockCA); 
-//lock_destroy(intersection_lock); 
+lock_destroy(lockCA);  
 
 kfree(Total_Cars);
 
