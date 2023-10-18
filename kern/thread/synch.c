@@ -96,7 +96,7 @@ V(struct semaphore *sem)
 ////////////////////////////////////////////////////////////
 //
 // Lock.
-
+//Makes the lock by allocating memory to set the threads 
 struct lock *
 lock_create(const char *name)
 {
@@ -114,24 +114,22 @@ lock_create(const char *name)
 	}
 	
 	// add stuff here as needed
- lock->thread_name=NULL;
- lock->busy=0;
+ 	lock->thread_name=NULL;
+ 	lock->busy=0;
 	
 	return lock;
 }
-
+//Will free the memory of the threads being used
 void
 lock_destroy(struct lock *lock)
 {
-
 	kfree(lock->name);
 	kfree(lock);
 }
-
+//Get the thread from the lock and make it busy 
 void
 lock_acquire(struct lock *lock)
 {
-  
    int spl=splhigh();
     while(lock->busy){
       thread_sleep(lock);
@@ -142,18 +140,17 @@ lock_acquire(struct lock *lock)
    splx(spl);
    
 }
-
+//Release the thread once it is done running the task it was given so its no longer busy
 void
 lock_release(struct lock *lock)
 {
-
    int spl=splhigh();
    lock->busy=0; 
    lock->thread_name=NULL; 
    thread_wakeup(lock);
    splx(spl);
 }
-
+//Check to see if the lock is busy and the name is the current thread
 int
 lock_do_i_hold(struct lock *lock)
 {
@@ -162,7 +159,6 @@ lock_do_i_hold(struct lock *lock)
       return 0;
     }
       return 1;
-
 }
 
 ////////////////////////////////////////////////////////////
