@@ -34,12 +34,12 @@ int createvehicles(int nargs,char ** args);
 void send_to_turn( int turn , unsigned long vehicledirection,unsigned long vehiclenumber,unsigned long vehicletype); 
 static void approachintersection(void * unusedpointer, unsigned long vehiclenumber); 
 static void turnright(unsigned long vehicledirection, unsigned long vehiclenumber, unsigned long vehicletype); 
-int get_turn( unsigned long vehicledirection);
+///int get_turn( unsigned long vehicledirection);
 static void turnleft(unsigned long vehicledirection, unsigned long vehiclenumber, unsigned long vehicletype); 
-int get_Right_turn( unsigned long vehicledirection);
+///int get_Right_turn( unsigned long vehicledirection);
 void yield(unsigned long lane); 
 void wait(unsigned long lane); 
-void print_mes(const char *str, unsigned long vehicletype,unsigned long vehiclenumber ); 
+///void print_mes(const char *str, unsigned long vehicletype,unsigned long vehiclenumber ); 
 
 /**Locks where they represent turns. We implement three locks since each would represent a turn */
 
@@ -135,7 +135,7 @@ lock *lockCA;*/
 	// }
 	///kprintf("Left func: begginign : Vehicle Type : %lu with vehivle Number: %lu is attempting to make a left turn \n",vehicletype, vehiclenumber ); 
 
-   int correct_turn =  get_turn(vehicledirection);
+   ///int correct_turn =  get_turn(vehicledirection);
 
 	if (vehicledirection == 0){
 
@@ -217,32 +217,32 @@ lock *lockCA;*/
 
 }
 
-void print_mes(const char *str, unsigned long vehicletype,unsigned long vehiclenumber ){
-	 	kprintf("Vehicle type: %lu vehicle Num: %lu is at section %s  in the intersection\n", vehicletype,vehiclenumber, str);
+// void print_mes(const char *str, unsigned long vehicletype,unsigned long vehiclenumber ){
+// 	 	kprintf("Vehicle type: %lu vehicle Num: %lu is at section %s  in the intersection\n", vehicletype,vehiclenumber, str);
 
 
-}
+// }
 
 // /**
 // * gets correct turn based on the traveled direction. 
 // * functon to return the correct left  turn the vehicle is trying to make. 
 // */
 
-int get_turn( unsigned long vehicledirection){
-	if (vehicledirection  == 0){
-		return 2; 
-	}
-	else if (vehicledirection == 1){
-		return 0; 
-	}
-	else if (vehicledirection == 2){
-		return 1; 
-	}
+// int get_turn( unsigned long vehicledirection){
+// 	if (vehicledirection  == 0){
+// 		return 2; 
+// 	}
+// 	else if (vehicledirection == 1){
+// 		return 0; 
+// 	}
+// 	else if (vehicledirection == 2){
+// 		return 1; 
+// 	}
 
-	return -1; 
+// 	return -1; 
 
 
-} 
+// } 
 
 
 /*
@@ -277,7 +277,7 @@ turnright(unsigned long vehicledirection,
 	(void) vehicletype;
 
 	///kprintf("right func : Vehicle Type : %lu with vehivle Number: %lu is attempting to make a right turn \n",vehicletype, vehiclenumber ); 
-	int correct_turn =  get_Right_turn(vehicledirection);
+	///int correct_turn =  get_Right_turn(vehicledirection);
 
 	if (vehicledirection == 0){
 
@@ -314,21 +314,21 @@ turnright(unsigned long vehicledirection,
 
 }
 
-int get_Right_turn( unsigned long vehicledirection){
-	if (vehicledirection  == 0){
-		return 0; 
-	}
-	else if (vehicledirection == 1){
-		return 1; 
-	}
-	else if (vehicledirection == 2){
-		return 2; 
-	}
+// int get_Right_turn( unsigned long vehicledirection){
+// 	if (vehicledirection  == 0){
+// 		return 0; 
+// 	}
+// 	else if (vehicledirection == 1){
+// 		return 1; 
+// 	}
+// 	else if (vehicledirection == 2){
+// 		return 2; 
+// 	}
 
-	return -1; 
+// 	return -1; 
 
 
-} 
+// } 
 
 
 /*
@@ -443,18 +443,7 @@ int get_Right_turn( unsigned long vehicledirection){
 */
 void send_to_turn( int turn , unsigned long vehicledirection,unsigned long vehiclenumber,unsigned long vehicletype){
 
-	if (turn == 0 ){
-	
-		turnleft(vehicledirection,vehiclenumber,vehicletype);
-	}
-	else {
-		
-		turnright(vehicledirection,vehiclenumber,vehicletype);
-
-	}
-
-
-
+	turn == 0 ? turnleft(vehicledirection,vehiclenumber,vehicletype) : turnright(vehicledirection,vehiclenumber,vehicletype);
 }
 
 // static
@@ -523,7 +512,7 @@ void send_to_turn( int turn , unsigned long vehicledirection,unsigned long vehic
 
 // }
 
-int get_direction_left(int dir,  int turn ){
+int get_dest_direction(int dir,  int turn ){
 	if (turn == 0)
 	{
 
@@ -588,7 +577,7 @@ approachintersection(void * unusedpointer,
 	vehicletype = random() % 2;
 
 	/// vehicle number, vehicle type (car or truck), approach direction and destination direction
-	int direct =  get_direction_left(vehicledirection,turndirection ); 
+	int direct =  get_dest_direction(vehicledirection,turndirection ); 
 
 	kprintf("Vehicle type: %s vehicle Num: %lu approach %s destination : %s direction: %s\n", vehicle_Type[vehicletype],vehiclenumber, route[vehicledirection] ,route[direct], vehicle_direction[turndirection]);
     //kprintf("Vehicle type: %d vehicle Num: %lu approach  \n", vehicletype, vehiclenumber);
