@@ -93,7 +93,6 @@ V(struct semaphore *sem)
 	thread_wakeup(sem);
 	splx(spl);
 }
-
 ////////////////////////////////////////////////////////////
 //
 // Lock.
@@ -115,6 +114,8 @@ lock_create(const char *name)
 	}
 	
 	// add stuff here as needed
+ lock->thread_name=NULL;
+ lock->busy=0;
 	
 	return lock;
 }
@@ -122,10 +123,7 @@ lock_create(const char *name)
 void
 lock_destroy(struct lock *lock)
 {
-	assert(lock != NULL);
 
-	// add stuff here as needed
-	
 	kfree(lock->name);
 	kfree(lock);
 }
@@ -133,27 +131,38 @@ lock_destroy(struct lock *lock)
 void
 lock_acquire(struct lock *lock)
 {
-	// Write this
-
-	(void)lock;  // suppress warning until code gets written
+  
+   int spl=splhigh();
+    while(lock->busy){
+      thread_sleep(lock);
+    }
+   lock->busy=1;
+   lock->thread_name=curthread; 
+  
+   splx(spl);
+   
 }
 
 void
 lock_release(struct lock *lock)
 {
-	// Write this
 
-	(void)lock;  // suppress warning until code gets written
+   int spl=splhigh();
+   lock->busy=0; 
+   lock->thread_name=NULL; 
+   thread_wakeup(lock);
+   splx(spl);
 }
 
 int
 lock_do_i_hold(struct lock *lock)
 {
-	// Write this
 
-	(void)lock;  // suppress warning until code gets written
+    if(!(lock->busy==1 && lock->thread_name==curthread)){
+      return 0;
+    }
+      return 1;
 
-	return 1;    // dummy until code gets written
 }
 
 ////////////////////////////////////////////////////////////
