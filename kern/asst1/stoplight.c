@@ -39,6 +39,7 @@ static void turnleft(unsigned long vehicledirection, unsigned long vehiclenumber
 int get_Right_turn( unsigned long vehicledirection);
 void yield(unsigned long lane); 
 void wait(unsigned long lane); 
+void print_mes(const char *str, unsigned long vehicletype,unsigned long vehiclenumber ); 
 
 /**Locks where they represent turns. We implement three locks since each would represent a turn */
 
@@ -60,8 +61,8 @@ static struct lock *intersection_lock; //
 
 #define NVEHICLES 20
 static const char *route[] = { "A", "B", "C" };
-//static const char *vehicle_Type[] = {"CAR", "TRUCK"}; 
-//static const char *vehicle_direction[] = {"left", "right"};
+static const char *vehicle_Type[] = {"CAR  ", "TRUCK"}; 
+static const char *vehicle_direction[] = {"left", "right"};
 
 int vehicles_left; 
 
@@ -143,17 +144,20 @@ lock *lockCA;*/
 			lock_acquire(lockAB);
 			assert(lock_do_i_hold(lockAB));
            // kprintf("Left func: begginign : Vehicle Type : %lu with vehivle Number: %lu is attempting to make a left turn \n",vehicletype, vehiclenumber ); 
-           /// kprintf("Vehicle type: %s vehicle Num: %lu is at section AB in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
-           /// kprintf("Vehicle type: %lu vehicle Num: %lu is at section AB in the intersection\n", vehicletype,vehiclenumber);
-
+            kprintf("Vehicle type: %s vehicle Num: %lu is at section AB in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+          //  kprintf("Vehicle type: %lu vehicle Num: %lu is at section AB in the intersection\n", vehicletype,vehiclenumber);
+            // print_mes("AB", vehicletype, vehiclenumber);
+            	lock_release(lockAB);
+			
 
 			lock_acquire(lockBC);
 		 	assert(lock_do_i_hold(lockBC));
-		//	kprintf("Vehicle type: %s vehicle Num: %lu is at section BC in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
-           /// kprintf("Vehicle type: %lu vehicle Num: %lu is at section BC in the intersection\n", vehicletype,vehiclenumber);
+			kprintf("Vehicle type: %s vehicle Num: %lu is at section BC in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+           // kprintf("Vehicle type: %lu vehicle Num: %lu is at section BC in the intersection\n", vehicletype,vehiclenumber);
+             //print_mes("BC", vehicletype, vehiclenumber);
 
 		 	lock_release(lockBC);
-		 	lock_release(lockAB);
+		 
 	
 	}
 
@@ -164,17 +168,20 @@ lock *lockCA;*/
 
 			lock_acquire(lockBC);
 			assert(lock_do_i_hold(lockBC));
-			//kprintf("Vehicle type: %s vehicle Num: %lu is at section BC in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
-            //kprintf("Vehicle type: %lu vehicle Num: %lu is at section BC in the intersection\n", vehicletype,vehiclenumber);
+			kprintf("Vehicle type: %s vehicle Num: %lu is at section BC in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+           // kprintf("Vehicle type: %lu vehicle Num: %lu is at section BC in the intersection\n", vehicletype,vehiclenumber);
+           /// print_mes("BC", vehicletype, vehiclenumber);
+            lock_release(lockBC);
 
 			lock_acquire(lockCA);
 		    assert(lock_do_i_hold(lockCA));
-		//	kprintf("Vehicle type: %s vehicle Num: %lu is at section CA in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+			kprintf("Vehicle type: %s vehicle Num: %lu is at section CA in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
 			//kprintf("Vehicle type: %lu vehicle Num: %lu is at section CA in the intersection\n", vehicletype,vehiclenumber);
+           /// print_mes("CA", vehicletype, vehiclenumber);
 
 			
             lock_release(lockCA);
-		 	lock_release(lockBC);
+		 	
 
 	}
 
@@ -186,24 +193,32 @@ lock *lockCA;*/
 
 		lock_acquire(lockCA);
 		assert(lock_do_i_hold(lockCA));
-		//kprintf("Vehicle type: %s vehicle Num: %lu is at section CA in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+		kprintf("Vehicle type: %s vehicle Num: %lu is at section CA in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
 		///kprintf("Vehicle type: %lu vehicle Num: %lu is at section CA in the intersection\n", vehicletype,vehiclenumber);
+       // print_mes("CA", vehicletype, vehiclenumber);
+        lock_release(lockCA);
 
 
 		lock_acquire(lockAB);
 		assert(lock_do_i_hold(lockAB));
-		//kprintf("Vehicle type: %s vehicle Num: %lu is at section AB in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+		kprintf("Vehicle type: %s vehicle Num: %lu is at section AB in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
        //	kprintf("Vehicle type: %lu vehicle Num: %lu is at section AB in the intersection\n", vehicletype,vehiclenumber);
-
+       // print_mes("AB", vehicletype, vehiclenumber);
 			
         lock_release(lockAB);
-		lock_release(lockCA);
+		
 	}
 
 
 
 
 		
+
+
+}
+
+void print_mes(const char *str, unsigned long vehicletype,unsigned long vehiclenumber ){
+	 	kprintf("Vehicle type: %lu vehicle Num: %lu is at section %s  in the intersection\n", vehicletype,vehiclenumber, str);
 
 
 }
@@ -267,9 +282,9 @@ turnright(unsigned long vehicledirection,
 	if (vehicledirection == 0){
 
 		lock_acquire(lockAB); 
-		assert(lock_do_i_hold(lockAB)==1);
-		///kprintf("Vehicle type: %s vehicle Num: %lu is at rigth section AB in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
-        //kprintf("Vehicle type: %lu vehicle Num: %lu is at rigth section AB in the intersection\n", vehicletype,vehiclenumber);
+		//assert(lock_do_i_hold(lockAB)==1);
+		kprintf("Vehicle type: %s vehicle Num: %lu is at rigth section AB in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+       // kprintf("Vehicle type: %lu vehicle Num: %lu is at rigth section AB in the intersection\n", vehicletype,vehiclenumber);
 
 		lock_release(lockAB); 
 		
@@ -277,8 +292,8 @@ turnright(unsigned long vehicledirection,
 	else if (vehicledirection == 1){
 
 		lock_acquire(lockBC); 
-		//kprintf("Vehicle type: %s vehicle Num: %lu is at right section BC in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
-		///kprintf("Vehicle type: %lu vehicle Num: %lu is at right section BC in the intersection\n",vehicletype,vehiclenumber);
+		kprintf("Vehicle type: %s vehicle Num: %lu is at right section BC in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+		//kprintf("Vehicle type: %lu vehicle Num: %lu is at right section BC in the intersection\n",vehicletype,vehiclenumber);
 
 		lock_release(lockBC); 
 
@@ -287,7 +302,7 @@ turnright(unsigned long vehicledirection,
 	else if (vehicledirection == 2){
 
 		lock_acquire(lockCA) ; 
-		//kprintf("Vehicle type: %s vehicle Num: %lu is at right section CA in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
+		kprintf("Vehicle type: %s vehicle Num: %lu is at right section CA in the intersection\n", vehicle_Type[vehicletype],vehiclenumber);
 		//kprintf("Vehicle type: %lu vehicle Num: %lu is at right section CA in the intersection\n", vehicletype,vehiclenumber);
 
 		lock_release(lockCA); 
@@ -575,10 +590,11 @@ approachintersection(void * unusedpointer,
 	/// vehicle number, vehicle type (car or truck), approach direction and destination direction
 	int direct =  get_direction_left(vehicledirection,turndirection ); 
 
-	//kprintf("Vehicle type: %s vehicle Num: %lu approach %s destination : %s direction: %s\n", vehicle_Type[vehicletype],vehiclenumber, route[vehicledirection] ,route[direct], vehicle_direction[turndirection]);
+	kprintf("Vehicle type: %s vehicle Num: %lu approach %s destination : %s direction: %s\n", vehicle_Type[vehicletype],vehiclenumber, route[vehicledirection] ,route[direct], vehicle_direction[turndirection]);
     //kprintf("Vehicle type: %d vehicle Num: %lu approach  \n", vehicletype, vehiclenumber);
 
 	if(vehicletype==CAR){
+		//kprintf("Vehicle type: %d vehicle Num: %lu approach  \n", vehicletype, vehiclenumber);
 		
 		Total_Cars[vehicledirection]+=1;  // increment cars on road. 
        /// if (truck_in_intersection   != 0 )
@@ -606,7 +622,8 @@ approachintersection(void * unusedpointer,
 	}
 
 	else {
-
+      
+	   //kprintf("Vehicle type: %d vehicle Num: %lu approach  \n", vehicletype, vehiclenumber);
 
 		if(Total_Cars[vehicledirection] > 0) {  
              /// wait(vehicledirection); /*truck threads are put to sleep if there are cars on the same root. */
@@ -635,7 +652,7 @@ approachintersection(void * unusedpointer,
 		    	thread_wakeup(temp);
 		     	splx(spl);
   }
-  	///kprintf("Vehicle type: %s vehicle Num: %lu exited %s destination : %s direction: %s\n", vehicle_Type[vehicletype],vehiclenumber, route[vehicledirection] ,route[direct], vehicle_direction[turndirection]);
+  	kprintf("Vehicle type: %s vehicle Num: %lu exited %s destination : %s direction: %s\n", vehicle_Type[vehicletype],vehiclenumber, route[vehicledirection] ,route[direct], vehicle_direction[turndirection]);
    // kprintf("Vehicle type: %d vehicle Num: %lu exited \n", vehicletype,vehiclenumber);
 
    //  lock_release(intersection_lock);
