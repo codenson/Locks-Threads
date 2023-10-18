@@ -783,11 +783,17 @@ if (intersection_lock == NULL) {
 // 		}
 // 		}
 
-		int spl = splhigh();
-   if(Vehicle_counter < NVEHICLES) {
-  		thread_sleep(temp);
-  	}
-  	splx(spl);
+// 		int spl = splhigh();
+//    if(Vehicle_counter < NVEHICLES) {
+//   		thread_sleep(temp);
+//   	}
+//   	splx(spl);
+
+	while (vehicles_left != 0){
+
+
+	}
+
 
 
 	kprintf("****************vehicles_left: %d   *****************\n", vehicles_left);
