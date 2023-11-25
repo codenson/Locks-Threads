@@ -55,6 +55,7 @@ mips_syscall(struct trapframe *tf)
 	assert(curspl==0);
 
 	callno = tf->tf_v0;
+	int i = 0; 
 
 	/*
 	 * Initialize retval to 0. Many of the system calls don't
