@@ -11,6 +11,13 @@
 
 struct addrspace;
 
+struct process {
+	pid_t pid;
+	int exitStat;
+	pid_t ppid;
+	/*Add more process variables if necessary*/
+}
+
 struct thread {
 	/**********************************************************/
 	/* Private thread members - internal to the thread system */
@@ -37,6 +44,7 @@ struct thread {
 	 * and is manipulated by the virtual filesystem (VFS) code.
 	 */
 	struct vnode *t_cwd;
+	struct process *procs;
 };
 
 /* Call once during startup to allocate data structures. */
