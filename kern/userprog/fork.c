@@ -9,7 +9,7 @@
 /*system fork that will split a process when the function is called.
   err checks and returns the pid of child or parent.
 */
-pid_t sys_fork(struct trapframe *parent_tf, int32_t *retval)
+pid_t sys_fork(struct trapframe *parent_tf, int32_t retval)
 {
     struct trapframe *child_tf;
     struct addrspace *child_addrs;
