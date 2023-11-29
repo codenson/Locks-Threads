@@ -1,9 +1,19 @@
-#include <types.h>
-#include <lib.h>
-#include <uio.h>
-#include <thread.h>
-#include <syscall.h>
+/** getppid.c */
 
-pid_t sys_getppid(){
-	return thread->procs->ppid;
+/*
+ *  Function: sys_getppid()
+ *
+ */
+
+#include <types.h>
+#include <syscall.h>
+#include <process.h>
+#include <thread.h>
+#include <curthread.h>
+
+int
+sys_getpid(pid_t *retval) 
+{
+	//if (curthread->procs->pid )
+	return 0;
 }

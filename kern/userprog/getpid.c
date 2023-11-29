@@ -1,9 +1,19 @@
-#include <types.h>
-#include <lib.h>
-#include <uio.h>
-#include <thread.h>
-#include<syscall.h>
+/*  getpid.c */
 
-pid_t getpid(){
-	return thread->procs->pid;
+/*
+ *  Function: sys_getpid()
+ *
+ */
+
+#include <types.h>
+#include <syscall.h>
+// #include <process.h>
+#include <thread.h>
+#include <curthread.h>
+
+pid_t sys_getpid()
+{
+	return curthread->procs->t_pid;
+
+	
 }
