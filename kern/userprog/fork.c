@@ -15,28 +15,28 @@ pid_t sys_fork(struct trapframe *parent_tf, int32_t retval)
     struct addrspace *child_addrs;
     struct thread *chthread;
 	    
-	// Allocate memory for the child's trapframe
+	// Allocate memory for trapframe of child
     child_tf = kmalloc(sizeof(struct trapframe));
     if (child_tf == NULL) {
         return ENOMEM;
     }
 
-    // Allocate memory for the child's address space
+    // Allocate memory for child address space 
     child_addrs = kmalloc(sizeof(struct addrspace));
     if (child_addrs == NULL) {
         kfree(child_tf);  // Free previously allocated memory
         return ENOMEM;
     }
 
-    // Copy the parent's trapframe to the child's trapframe
+    // Copy the parent's tf to child's tp
     memcpy(child_tf, parent_tf, sizeof(struct trapframe));
 	
 	
-    // Set the child's parent process ID
+    // Setting the child's parent PID
     chthread->procs->ppid = curthread->procs->pid;
 	
 	
-    // Copy the address space from the parent to the child
+    // Copy the address space from parent to child process
     int err = as_copy(curthread->t_vmspace, &chthread->t_vmspace);
     if (err) {
         // Handle the error: clean up and return an error code
@@ -44,7 +44,7 @@ pid_t sys_fork(struct trapframe *parent_tf, int32_t retval)
 		return err;
     }
 
-    // Activate the new address space
+    // Let the new address space start operating
     as_activate(chthread->t_vmspace);
 
 	// Create a new thread for the child process and check to see if it worked or not
