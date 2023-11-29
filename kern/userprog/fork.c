@@ -33,7 +33,7 @@ pid_t sys_fork(struct trapframe *parent_tf, int32_t retval)
 	
 	
     // Set the child's parent process ID
-    chthread->ppid = curthread->pid;
+    chthread->procs->ppid = curthread->procs->pid;
 	
 	
     // Copy the address space from the parent to the child

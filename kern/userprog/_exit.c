@@ -16,7 +16,7 @@ void sys__exit(int exitNum){
 
 	KASSERT(curthread!=NULL);
 	
-	curthread->gone = true;
-	curthread->exitcode = exitNum; 
+	curthread->procs->gone = true;
+	curthread->procs->exitStat = exitNum; 
 	thread_exit();
 }
