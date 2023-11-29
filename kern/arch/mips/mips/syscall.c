@@ -81,7 +81,7 @@ mips_syscall(struct trapframe *tf)
 			err = sys_execv();
 			break;
 		case SYS_fork:
-			err = fork();
+			err = sys_fork(tf, retval);
 			break;
 		case SYS_waitpid:
 			retval = sys_waitpid();

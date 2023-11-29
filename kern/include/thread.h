@@ -16,6 +16,7 @@ struct process {
 	int exitStat;
 	pid_t ppid;
 	/*Add more process variables if necessary*/
+	bool gone = false;
 }
 
 struct thread {
