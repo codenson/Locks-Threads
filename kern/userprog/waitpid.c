@@ -1,10 +1,13 @@
-#include <errno.h>
-#include <thread.h> 
 
-int sys_waitpid(pid_t pid, userptr_t status, int options, int *retval){
+#include <types.h>        
+#include <kern/errno.h>   
+#include <thread.h>
+#include <lib.h>  	
 
-
-    //status check. 
+struct process *get_child_process(pid_t pid);
+void process_cleanup(struct process *proc);
+int sys_waitpid(pid_t pid, userptr_t status, int options, int *retval) {
+ 
     if (status == NULL) {
         *retval = EFAULT;
          return -1;
@@ -12,32 +15,34 @@ int sys_waitpid(pid_t pid, userptr_t status, int options, int *retval){
 
 	//options check
 	if(options != 0){
-		retval = EINVAL;
+		*retval = EINVAL;
 		return -1;
 	}
-
-	 // Retrieving  the child process. if child process is NULL, returns a fault code. 
-    struct process *child_proccess = get_child_process(pid);
-    if (child_p == NULL) {
+    struct process *child_process = get_child_process(pid);
+    if (child_process == NULL) {
         *retval = EINVAL;
         return -1;
     }
-    // putting the child process to sleep using thread_sleep() untill woken up. 
-    while (!child_proccess->has_exited) {
-        thread_sleep(); 
+
+    while (!child_process->terminated) { 
+        thread_sleep(child_process);  
     }
 
-    // Copying out the process and exit status
-    if (copyout(&child_proccess->exitcode, status, sizeof(int)) != 0) {
+    if (copyout(&child_process->terminated, status, sizeof(int)) != 0) {  
         *retval = EFAULT;
         return -1;
     }
 
-    // Cleaning up  child process. 
-     process_cleanup(child_proccess);
+    //process_cleanup(child_process);
 
     return pid;
 }
-	
-	
-	
+
+/**
+ * function to retrieve process child off the list. not compeleted yet. 
+*/
+struct process *get_child_process(pid_t pid){
+
+
+    return NULL; 
+}

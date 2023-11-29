@@ -2,8 +2,7 @@
 #include <syscall.h>
 #include <thread.h>
 #include <curthread.h>
-#include <stdlib.h>
-#include <uio.h>
+
 
 /*
  *  Function: sys_exit()
@@ -12,11 +11,11 @@
  * The exit code will help with thread exit and it will destroy this thread. Before that, it will checck if its null.
  */
 
-void sys__exit(int exitNum){
+void sys_exit(int exitNum){
 
 	KASSERT(curthread!=NULL);
 	
-	curthread->procs->gone = true;
+	curthread->procs->gone = 1;
 	curthread->procs->exitStat = exitNum; 
 	thread_exit();
 }

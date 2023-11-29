@@ -9,6 +9,8 @@
 #include <machine/pcb.h>
 
 
+
+
 struct addrspace;
 
 struct process {
@@ -16,8 +18,11 @@ struct process {
 	int exitStat;
 	pid_t ppid;
 	/*Add more process variables if necessary*/
-	bool gone = false;
-}
+	int gone ;
+	 int terminated;
+    int status;
+    struct semaphore *exit_sem;
+};
 
 struct thread {
 	/**********************************************************/
@@ -46,6 +51,8 @@ struct thread {
 	 */
 	struct vnode *t_cwd;
 	struct process *procs;
+	pid_t pid;
+	pid_t ppid;
 };
 
 /* Call once during startup to allocate data structures. */

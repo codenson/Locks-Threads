@@ -1,10 +1,24 @@
+// #include <types.h>
+// #include <syscall.h>
+// #include <thread.h>
+// #include <curthread.h>
+// #include <lib.h>
+// #include <uio.h>
+// #include <trapframe.h>
 #include <types.h>
 #include <syscall.h>
-#include <process.h>
 #include <thread.h>
 #include <curthread.h>
 #include <lib.h>
 #include <uio.h>
+//#include <mips/trapframe.h>
+#include <trapframe.h>
+
+
+//#include <trapframe.h>  
+#include <addrspace.h> 
+#include <kern/errno.h>
+
 
 /*system fork that will split a process when the function is called.
   err checks and returns the pid of child or parent.

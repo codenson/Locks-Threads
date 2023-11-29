@@ -95,7 +95,7 @@ mips_syscall(struct trapframe *tf)
 			retval = sys_getpid();
 			break;
 		case SYS_getppid:
-			retval = sys_getppid();
+			retval = sys_getppid(); 
 			break;
 	    default:
 		kprintf("Unknown syscall %d\n", callno);
